@@ -2,7 +2,7 @@
 
 Connect **Cursor**, **Claude**, **ChatGPT**, and **Gemini** to [deeptrue](https://www.deeptrue.ch) surveys and research. This Model Context Protocol server reads and updates projects, briefings, surveys, fielding, panels, and reports through `https://api.deeptrue.ch`.
 
-<img src="./docs/wordmark.svg" alt="deeptrue" width="280" />
+<img src="./docs/logo.svg" alt="deeptrue" width="196" />
 
 ![deeptrue MCP connects Cursor, Claude, ChatGPT, and Gemini to deeptrue surveys. Remote URL https://mcp.deeptrue.ch/mcp](./docs/og.png)
 
