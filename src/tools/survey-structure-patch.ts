@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Writable SurveySerializer fields (survey-engine SurveyViewSet partial_update).
+ * Writable survey fields accepted by PATCH /v1/org/<org>/surveys/<uuid>/.
  * Source: engine.surveys.serializers.SurveySerializer Meta (excludes read_only uuid, project_uuid).
  */
 export const SURVEY_STRUCTURE_PATCH_KEYS = new Set(['id', 'name', 'json', 'survey_template_uuid']);
@@ -170,7 +170,7 @@ export const surveyStructurePatchSchema = z.record(z.unknown()).superRefine((pat
 export function assertSurveyStructurePatch(patch: Record<string, unknown>): Record<string, unknown> {
   const keys = Object.keys(patch);
   if (keys.length === 0) {
-    throw new Error('patch must include at least one survey-engine field.');
+    throw new Error('patch must include at least one survey field.');
   }
   const unknown = keys.filter((key) => !SURVEY_STRUCTURE_PATCH_KEYS.has(key));
   if (unknown.length > 0) {

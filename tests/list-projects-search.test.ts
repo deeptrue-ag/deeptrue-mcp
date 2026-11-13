@@ -4,7 +4,6 @@ import { createDeepTrueMcpServer } from '../src/server.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 type ToolResult = { isError?: boolean; content: Array<{ text: string }> };

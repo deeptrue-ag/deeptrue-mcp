@@ -8,7 +8,6 @@ import { resolvePanelPath } from '../src/tools/panel-routes.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 describe('requireWriteConfirm', () => {
@@ -120,7 +119,6 @@ describe('DeepTrueApiClient', () => {
 
     const configWithKey = loadConfig({
       DEEPTRUE_API_BASE: 'http://api.test',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       DEEPTRUE_API_KEY: 'dt_server_admin',
     });
     const client = new DeepTrueApiClient(
@@ -287,7 +285,7 @@ describe('session cache', () => {
     [301, 'https://evil.example/collect'],
     [302, 'http://api.test:9/v1/organizations/'],
     [303, '//evil.example/collect'],
-    [307, 'http://survey.test/v1/org/public/surveys/'],
+    [307, 'http://other.example/v1/org/public/surveys/'],
     [308, 'http://api.test.evil.example/collect'],
   ] as const)(
     'does not request a %s Location on another host',
@@ -364,7 +362,6 @@ describe('session cache', () => {
       const client = new DeepTrueApiClient(
         loadConfig({
           DEEPTRUE_API_BASE: apiBase,
-          DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
         }),
         { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
         { apiKey: 'dt_test', org: 'public' },
@@ -397,7 +394,6 @@ describe('session cache', () => {
     const client = new DeepTrueApiClient(
       loadConfig({
         DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-        DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       }),
       { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
       { apiKey: 'dt_test', org: 'public' },
@@ -459,7 +455,6 @@ describe('session cache', () => {
     const client = new DeepTrueApiClient(
       loadConfig({
         DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-        DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       }),
       { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
       { apiKey: 'dt_test', org: 'public' },
@@ -506,7 +501,6 @@ describe('session cache', () => {
       const client = new DeepTrueApiClient(
         loadConfig({
           DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-          DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
         }),
         { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
         { apiKey: 'dt_test', org: 'public' },
@@ -548,7 +542,6 @@ describe('session cache', () => {
       const client = new DeepTrueApiClient(
         loadConfig({
           DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-          DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
         }),
         { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
         { apiKey: 'dt_test', org: 'public' },
@@ -589,7 +582,6 @@ describe('session cache', () => {
       const client = new DeepTrueApiClient(
         loadConfig({
           DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-          DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
         }),
         { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
         { apiKey: 'dt_test', org: 'public' },
@@ -639,7 +631,6 @@ describe('session cache', () => {
       const client = new DeepTrueApiClient(
         loadConfig({
           DEEPTRUE_API_BASE: 'http://127.0.0.1:3100',
-          DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
         }),
         { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
         { apiKey: 'dt_test', org: 'public' },
@@ -668,7 +659,6 @@ describe('session cache', () => {
     const client = new DeepTrueApiClient(
       loadConfig({
         DEEPTRUE_API_BASE: 'http://127.0.0.1:8001',
-        DEEPTRUE_SURVEY_ENGINE_BASE: 'http://127.0.0.1:8050',
       }),
       { token: 'jwt-1', org: 'public', scopes: ['mcp:read'] },
       { apiKey: 'dt_test', org: 'public' },
@@ -680,21 +670,21 @@ describe('session cache', () => {
     ]);
   });
 
-  it('does not follow a survey-engine redirect onto the API host', async () => {
+  it('does not follow a survey path redirect onto another host', async () => {
     const calls: { url: string; redirect: RequestInit['redirect'] }[] = [];
     global.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
       calls.push({ url: String(input), redirect: init?.redirect });
       return new Response(null, {
         status: 302,
-        headers: { Location: 'http://api.test/v1/organizations/' },
+        headers: { Location: 'http://other.example/v1/organizations/' },
       });
     }) as typeof fetch;
 
     await expect(
-      clientWithSession().request({ base: 'survey', path: 'org/public/surveys/' }),
+      clientWithSession().request({ path: 'org/public/surveys/' }),
     ).rejects.toThrow(/redirect location is a different host/);
     expect(calls).toEqual([
-      { url: 'http://survey.test/v1/org/public/surveys/', redirect: 'manual' },
+      { url: 'http://api.test/v1/org/public/surveys/', redirect: 'manual' },
     ]);
   });
 
@@ -756,7 +746,7 @@ describe('session cache', () => {
     },
   );
 
-  it('follows a same-host survey-engine redirect and sends the bearer again', async () => {
+  it('follows a same-host survey path redirect and sends the bearer again', async () => {
     const calls: { url: string; authorization: string | null }[] = [];
     global.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
       calls.push({
@@ -776,17 +766,16 @@ describe('session cache', () => {
     }) as typeof fetch;
 
     const data = await clientWithSession().request({
-      base: 'survey',
       path: 'org/public/surveys/',
     });
     expect(data).toEqual({ ok: true });
     expect(calls).toEqual([
       {
-        url: 'http://survey.test/v1/org/public/surveys/',
+        url: 'http://api.test/v1/org/public/surveys/',
         authorization: 'JWT jwt-1',
       },
       {
-        url: 'http://survey.test/v1/org/public/surveys/canonical/',
+        url: 'http://api.test/v1/org/public/surveys/canonical/',
         authorization: 'JWT jwt-1',
       },
     ]);
@@ -945,7 +934,6 @@ describe('resolveSession credentials', () => {
 
     const configWithKey = loadConfig({
       DEEPTRUE_API_BASE: 'http://api.test',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       DEEPTRUE_API_KEY: 'dt_server_admin',
       DEEPTRUE_ORG: 'public',
     });
@@ -970,7 +958,6 @@ describe('resolveSession credentials', () => {
 
     const configWithKey = loadConfig({
       DEEPTRUE_API_BASE: 'http://api.test',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       DEEPTRUE_API_KEY: 'dt_server_admin',
     });
     const session = await resolveSession(configWithKey, {});

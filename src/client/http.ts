@@ -12,7 +12,6 @@ export type ApiCallOptions = {
   params?: Record<string, unknown>;
   body?: unknown;
   org?: string;
-  base?: 'api' | 'survey';
 };
 
 function appendParams(url: URL, params?: Record<string, unknown>): void {
@@ -438,7 +437,7 @@ export class DeepTrueApiClient {
 
   /**
    * Follow a redirect only when its raw origin is exactly this request's origin
-   * (the API base, or the survey-engine base for survey calls). A Location with a
+   * (the configured API origin). A Location with a
    * backslash (raw, or `%5C` / `%5c` after one percent-decode), a C0 control or
    * DEL (raw, or `%09` / `%0A` / `%0D` / `%00` / `%1F` / `%7F` and the other C0
    * encodings after one percent-decode), U+0085 / U+2028 / U+2029 (raw, or
@@ -509,7 +508,7 @@ export class DeepTrueApiClient {
       await this.exchangeSession();
     }
 
-    const baseUrl = options.base === 'survey' ? this.config.surveyEngineBase : this.config.apiBase;
+    const baseUrl = this.config.apiBase;
     const method = options.method ?? (options.body ? 'POST' : 'GET');
     const response = await this.fetchOnConfiguredHost(baseUrl, options);
 

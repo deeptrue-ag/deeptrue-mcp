@@ -4,14 +4,12 @@
       "command": "npx",
       "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
       "env": {
-        "DEEPTRUE_API_BASE": "http://127.0.0.1:8001",
-        "DEEPTRUE_SURVEY_ENGINE_BASE": "http://127.0.0.1:8050",
-        "DEEPTRUE_API_KEY": "dt_replace_me",
-        "DEEPTRUE_ORG": "public"
+        "DEEPTRUE_API_BASE": "https://api.deeptrue.ch",
+        "DEEPTRUE_API_KEY": "dt_replace_me"
       }
     },
     "deeptrue-remote": {
-      "url": "http://127.0.0.1:3100/mcp"
+      "url": "https://mcp.deeptrue.ch/mcp"
     }
   }
 }

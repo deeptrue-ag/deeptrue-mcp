@@ -5,7 +5,6 @@ import { MAX_PROJECT_BODY_BYTES } from '../src/tools/project-body.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 const projectId = '42';

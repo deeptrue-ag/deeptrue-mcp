@@ -1,17 +1,25 @@
-import { loadConfig } from '../src/config.js';
+import { DEFAULT_API_ORIGIN, DEFAULT_MCP_PUBLIC_URL, loadConfig } from '../src/config.js';
 import { hasScope, authMaterialFromHeaders } from '../src/auth.js';
 
 describe('loadConfig', () => {
-  it('normalizes API bases to /v1/', () => {
+  it('defaults to the production API origin', () => {
+    const config = loadConfig({});
+    expect(config.apiBase).toBe(`${DEFAULT_API_ORIGIN}/v1/`);
+    expect(config.publicUrl).toBe(DEFAULT_MCP_PUBLIC_URL);
+    expect(config.resourceUrl).toBe(`${DEFAULT_MCP_PUBLIC_URL}/mcp`);
+    expect(config.oauthIssuerUrl).toBe(DEFAULT_API_ORIGIN);
+    expect(config).not.toHaveProperty('surveyEngineBase');
+  });
+
+  it('lets DEEPTRUE_API_BASE override the origin and normalizes /v1/', () => {
     const config = loadConfig({
-      DEEPTRUE_API_BASE: 'http://localhost:8001',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://localhost:8050/v1',
-      MCP_PUBLIC_URL: 'http://localhost:3100/',
+      DEEPTRUE_API_BASE: 'https://api.example.test/v1',
+      MCP_PUBLIC_URL: 'https://mcp.example.test/',
     });
-    expect(config.apiBase).toBe('http://localhost:8001/v1/');
-    expect(config.surveyEngineBase).toBe('http://localhost:8050/v1/');
-    expect(config.publicUrl).toBe('http://localhost:3100');
-    expect(config.resourceUrl).toBe('http://localhost:3100/mcp');
+    expect(config.apiBase).toBe('https://api.example.test/v1/');
+    expect(config.publicUrl).toBe('https://mcp.example.test');
+    expect(config.resourceUrl).toBe('https://mcp.example.test/mcp');
+    expect(config.oauthIssuerUrl).toBe('https://api.example.test');
   });
 });
 

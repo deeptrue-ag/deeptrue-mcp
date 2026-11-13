@@ -2,17 +2,19 @@
 
 Model Context Protocol server for [deeptrue](https://www.deeptrue.ch). Use it from **Cursor**, **Claude** (Desktop and connectors), and **OpenAI/ChatGPT**.
 
-This repository is the standalone server. It does not depend on the deeptrue monorepo. Cursor (and other stdio clients) spawn the process and pass environment variables, including `DEEPTRUE_API_KEY` and the API base URLs.
+This repository is the standalone server. It does not depend on the deeptrue monorepo. Cursor (and other stdio clients) spawn the process and pass `DEEPTRUE_API_KEY`.
 
 ## What it does
 
-Exposes research-assistant tools over the deeptrue HTTP API (`/v1`) and the survey-engine API (`/v1`):
+Exposes research-assistant tools over one API, `https://api.deeptrue.ch`:
 
 - Organizations / active org
 - Projects, briefing, accept / collect / finish / archive
 - Surveys, statistics, respondents (PII redacted by default)
 - Panel status / demands (Cint, Bilendi, Dynata)
 - Report files and layouts
+
+Every tool uses that origin. There is no separate survey host.
 
 ## Run with npx (stdio)
 
@@ -25,21 +27,54 @@ No clone is required. `npx` installs this GitHub repository, builds it, and runs
       "command": "npx",
       "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
       "env": {
-        "DEEPTRUE_API_BASE": "http://127.0.0.1:8001",
-        "DEEPTRUE_SURVEY_ENGINE_BASE": "http://127.0.0.1:8050",
-        "DEEPTRUE_API_KEY": "dt_…",
-        "DEEPTRUE_ORG": "public"
+        "DEEPTRUE_API_BASE": "https://api.deeptrue.ch",
+        "DEEPTRUE_API_KEY": "dt_…"
       }
     }
   }
 }
 ```
 
-`DEEPTRUE_ORG` must be the organization shown on the key, or you can omit it. `public` is the local example organization. Point `DEEPTRUE_API_BASE` at `https://api.dev.deeptrue.ch` or `https://api.deeptrue.ch` when the key belongs to that environment, and set `DEEPTRUE_SURVEY_ENGINE_BASE` to `https://api.survey.dev.deeptrue.ch` or `https://api.survey.deeptrue.ch`.
+`DEEPTRUE_API_KEY` is the only value you must set. The key is created under **Settings → MCP API keys** on [app.deeptrue.ch](https://app.deeptrue.ch/settings/mcp-api-keys). `DEEPTRUE_ORG` is optional; omit it to use the organization stored on the key. Set `DEEPTRUE_API_BASE` only when the key belongs to another deeptrue environment.
 
 The same block is in [`mcp.example.json`](./mcp.example.json). Put it in Cursor’s project or user `mcp.json`. Keep the `dt_…` secret in that local file or a password manager. Do not commit it.
 
 Requires Node.js `>=20.9.0`.
+
+## Remote HTTP
+
+Point the client at `https://mcp.deeptrue.ch/mcp`.
+
+1. Complete OAuth against `https://api.deeptrue.ch` (`/.well-known/oauth-authorization-server`).
+2. **API key headers** (`Authorization: Bearer dt_…` or `X-DeepTrue-Api-Key`) work for stdio and clients that support static headers.
+3. **OpenAI / ChatGPT (remote)** uses **OAuth only**. Do not paste a `dt_…` API key into ChatGPT connector settings.
+
+OAuth redirect allowlists include Cursor, Claude, and ChatGPT callbacks. `GET /healthz` on the MCP host returns `{ "ok": true, "service": "deeptrue-mcp" }`.
+
+## Environment
+
+| Variable | Purpose |
+| --- | --- |
+| `DEEPTRUE_API_KEY` | `dt_…` key for stdio. Required. |
+| `DEEPTRUE_API_BASE` | API origin. Default `https://api.deeptrue.ch`. |
+| `DEEPTRUE_ORG` | Optional default org domain/slug |
+| `MCP_PUBLIC_URL` | Public MCP URL (OAuth resource indicator). Default `https://mcp.deeptrue.ch`. |
+| `DEEPTRUE_OAUTH_ISSUER_URL` | OAuth issuer (default: API origin) |
+| `MCP_PORT` / `MCP_BIND_HOST` | HTTP listen settings |
+| `MCP_ALLOWED_HOSTS` | Comma-separated Host allowlist for HTTP |
+
+## Create an API key
+
+In the deeptrue dashboard, open **Settings → MCP API keys**. The secret starts with `dt_` and is shown once. Store it as `DEEPTRUE_API_KEY`.
+
+People who already have a dashboard JWT can also create a key:
+
+```bash
+curl -X POST https://api.deeptrue.ch/v1/auth/mcp/keys/ \
+  -H "Authorization: JWT <your-jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"cursor"}'
+```
 
 ## Clone and run
 
@@ -50,51 +85,7 @@ npm install
 npx deeptrue-mcp
 ```
 
-`npm install` builds `dist/` (the `prepare` script). `npx deeptrue-mcp` with no arguments starts stdio. To serve Streamable HTTP on port 3100:
-
-```bash
-npm run dev
-# or, after the build: npm start
-```
-
-The HTTP endpoint is `http://127.0.0.1:3100/mcp`. `GET /healthz` returns `{ "ok": true, "service": "deeptrue-mcp" }`.
-
-## Environment
-
-| Variable | Purpose |
-| --- | --- |
-| `DEEPTRUE_API_BASE` | Backend base (default `http://127.0.0.1:8001`) |
-| `DEEPTRUE_SURVEY_ENGINE_BASE` | Survey-engine base (default `http://127.0.0.1:8050`) |
-| `DEEPTRUE_API_KEY` | `dt_…` key for stdio |
-| `DEEPTRUE_ORG` | Optional default org domain/slug |
-| `MCP_PUBLIC_URL` | Public MCP URL (OAuth resource indicator). Planned hosts: `https://mcp.dev.deeptrue.ch` and `https://mcp.deeptrue.ch` |
-| `DEEPTRUE_OAUTH_ISSUER_URL` | OAuth issuer (default: API origin) |
-| `MCP_PORT` / `MCP_BIND_HOST` | HTTP listen settings |
-| `MCP_ALLOWED_HOSTS` | Comma-separated Host allowlist for HTTP (default `127.0.0.1,localhost`) |
-
-## Create an API key
-
-In the deeptrue dashboard, open **Settings → MCP API keys**. The secret starts with `dt_` and is shown once. Store it as `DEEPTRUE_API_KEY`.
-
-People who already have a dashboard JWT can also create a key against the API origin (the same host you set as `DEEPTRUE_API_BASE`, which does not include `/v1`):
-
-```bash
-curl -X POST http://127.0.0.1:8001/v1/auth/mcp/keys/ \
-  -H "Authorization: JWT <your-jwt>" \
-  -H "Content-Type: application/json" \
-  -d '{"name":"cursor-local"}'
-```
-
-Hosted origins are `https://api.dev.deeptrue.ch` and `https://api.deeptrue.ch`.
-
-## Remote HTTP and OAuth
-
-1. Run `npm run dev` (or point the client at a hosted MCP URL such as `https://mcp.dev.deeptrue.ch/mcp` or `https://mcp.deeptrue.ch/mcp` once that host is deployed).
-2. Complete OAuth against the API issuer (`/.well-known/oauth-authorization-server` on the deeptrue API).
-3. **API key headers** (`Authorization: Bearer dt_…` or `X-DeepTrue-Api-Key`) work for stdio, local HTTP, and clients that support static headers.
-4. **OpenAI / ChatGPT (remote)** uses **OAuth only**. Do not paste a `dt_…` API key into ChatGPT connector settings.
-
-OAuth redirect allowlists include Cursor, Claude, and ChatGPT callbacks.
+`npm install` builds `dist/` (the `prepare` script). `npx deeptrue-mcp` with no arguments starts stdio. `npm run dev` serves Streamable HTTP.
 
 ## Develop
 

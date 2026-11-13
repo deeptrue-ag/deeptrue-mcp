@@ -4,7 +4,6 @@ import { createDeepTrueMcpServer } from '../src/server.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 const normalSurveyId = '550e8400-e29b-41d4-a716-446655440000';
@@ -107,7 +106,7 @@ const toolCases: ToolCase[] = [
   {
     tool: 'get_survey',
     field: 'survey_uuid',
-    host: 'survey.test',
+    host: 'api.test',
     pathname: (segment) => `/v1/org/public/surveys/${segment}/`,
     normal: normalSurveyId,
     label: 'Survey id',
@@ -116,7 +115,7 @@ const toolCases: ToolCase[] = [
     tool: 'update_survey_structure',
     field: 'survey_uuid',
     extra: { confirm: true, patch: { name: 'Wave' } },
-    host: 'survey.test',
+    host: 'api.test',
     pathname: (segment) => `/v1/org/public/surveys/${segment}/`,
     normal: normalSurveyId,
     label: 'Survey id',
@@ -124,7 +123,7 @@ const toolCases: ToolCase[] = [
   {
     tool: 'get_survey_statistics',
     field: 'project_uuid',
-    host: 'survey.test',
+    host: 'api.test',
     pathname: (segment) => `/v1/org/public/surveys/statistics/${segment}/`,
     normal: normalSurveyId,
     label: 'Project id',
@@ -132,7 +131,7 @@ const toolCases: ToolCase[] = [
   {
     tool: 'list_respondents',
     field: 'survey_uuid',
-    host: 'survey.test',
+    host: 'api.test',
     pathname: (segment) => `/v1/org/public/surveys/responses/${segment}/progress/`,
     normal: normalSurveyId,
     label: 'Survey id',

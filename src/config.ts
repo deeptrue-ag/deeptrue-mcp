@@ -1,6 +1,5 @@
 export type McpConfig = {
   apiBase: string;
-  surveyEngineBase: string;
   apiKey?: string;
   org?: string;
   publicUrl: string;
@@ -9,6 +8,12 @@ export type McpConfig = {
   oauthIssuerUrl: string;
   port: number;
 };
+
+/** Production API origin. `DEEPTRUE_API_BASE` overrides this for deeptrue staff. */
+export const DEFAULT_API_ORIGIN = 'https://api.deeptrue.ch';
+
+/** Production MCP HTTP host. `MCP_PUBLIC_URL` overrides this for deeptrue staff. */
+export const DEFAULT_MCP_PUBLIC_URL = 'https://mcp.deeptrue.ch';
 
 function stripTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
@@ -20,11 +25,8 @@ function ensureV1Base(value: string): string {
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): McpConfig {
-  const apiBase = ensureV1Base(env.DEEPTRUE_API_BASE ?? 'http://127.0.0.1:8001');
-  const surveyEngineBase = ensureV1Base(
-    env.DEEPTRUE_SURVEY_ENGINE_BASE ?? 'http://127.0.0.1:8050',
-  );
-  const publicUrl = stripTrailingSlash(env.MCP_PUBLIC_URL ?? 'http://127.0.0.1:3100');
+  const apiBase = ensureV1Base(env.DEEPTRUE_API_BASE ?? DEFAULT_API_ORIGIN);
+  const publicUrl = stripTrailingSlash(env.MCP_PUBLIC_URL ?? DEFAULT_MCP_PUBLIC_URL);
   const resourceUrl = publicUrl.endsWith('/mcp') ? publicUrl : `${publicUrl}/mcp`;
   const oauthIssuerUrl = stripTrailingSlash(
     env.DEEPTRUE_OAUTH_ISSUER_URL ?? stripTrailingSlash(apiBase.replace(/\/v1\/?$/, '')),
@@ -32,7 +34,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): McpConfig {
 
   return {
     apiBase,
-    surveyEngineBase,
     apiKey: env.DEEPTRUE_API_KEY || undefined,
     org: env.DEEPTRUE_ORG || undefined,
     publicUrl,

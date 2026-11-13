@@ -25,7 +25,7 @@ export function registerSurveyTools(
     'list_surveys',
     {
       title: 'List surveys',
-      description: 'List surveys in the active organization via survey-engine.',
+      description: 'List surveys in the active organization.',
       inputSchema: {
         limit: z.number().int().positive().max(100).optional(),
         offset: z.number().int().nonnegative().optional(),
@@ -38,7 +38,6 @@ export function registerSurveyTools(
         const client = await clientForOrganization(getClient, organization);
         assertScope(client, 'mcp:read');
         const data = await client.request({
-          base: 'survey',
           path: client.orgPath('surveys/'),
           params: { limit, offset },
         });
@@ -53,7 +52,7 @@ export function registerSurveyTools(
     'get_survey',
     {
       title: 'Get survey',
-      description: 'Fetch a survey by uuid from survey-engine.',
+      description: 'Fetch a survey by uuid.',
       inputSchema: {
         survey_uuid: z.string().describe('Survey UUID'),
         ...organizationField,
@@ -65,7 +64,6 @@ export function registerSurveyTools(
         const client = await clientForOrganization(getClient, organization);
         assertScope(client, 'mcp:read');
         const data = await client.request({
-          base: 'survey',
           path: client.orgPath(`surveys/${encodePathSegment(survey_uuid, 'Survey id')}/`),
         });
         return textResult(data);
@@ -80,7 +78,7 @@ export function registerSurveyTools(
     {
       title: 'Update survey structure',
       description:
-        'PATCH an existing survey with a documented survey-engine payload only. Requires confirm=true. Do not invent schema fields.',
+        'PATCH an existing survey with a documented survey payload only. Requires confirm=true. Do not invent schema fields.',
       inputSchema: {
         survey_uuid: z.string(),
         patch: surveyStructurePatchSchema.describe(
@@ -98,7 +96,6 @@ export function registerSurveyTools(
         requireWriteConfirm(confirm, 'update_survey_structure');
         const body = assertSurveyStructurePatch(patch);
         const data = await client.request({
-          base: 'survey',
           method: 'PATCH',
           path: client.orgPath(`surveys/${encodePathSegment(survey_uuid, 'Survey id')}/`),
           body,
@@ -114,7 +111,7 @@ export function registerSurveyTools(
     'get_survey_statistics',
     {
       title: 'Get survey statistics',
-      description: 'Fetch survey statistics by project uuid from survey-engine.',
+      description: 'Fetch survey statistics by project uuid.',
       inputSchema: {
         project_uuid: z.string().describe('Project UUID used by statistics endpoint'),
         ...organizationField,
@@ -126,7 +123,6 @@ export function registerSurveyTools(
         const client = await clientForOrganization(getClient, organization);
         assertScope(client, 'mcp:read');
         const data = await client.request({
-          base: 'survey',
           path: client.orgPath(`surveys/statistics/${encodePathSegment(project_uuid, 'Project id')}/`),
         });
         return textResult(data);
@@ -157,7 +153,6 @@ export function registerSurveyTools(
           assertScope(client, 'mcp:pii');
         }
         const data = await client.request<unknown>({
-          base: 'survey',
           path: client.orgPath(`surveys/responses/${encodePathSegment(survey_uuid, 'Survey id')}/progress/`),
         });
 

@@ -5,7 +5,6 @@ import { MAX_ACCEPT_PRODUCT_SLUG_BYTES } from '../src/tools/accept-product-slug.
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 const projectId = '42';

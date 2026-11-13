@@ -28,7 +28,6 @@ const aliasOrigins = [
 
 const config: McpConfig = {
   apiBase: 'http://127.0.0.1:8001/v1/',
-  surveyEngineBase: 'http://127.0.0.1:8050/v1/',
   publicUrl: 'http://127.0.0.1:3100',
   resourceUrl: 'http://127.0.0.1:3100/mcp',
   oauthIssuerUrl: 'http://127.0.0.1:8001',

@@ -5,7 +5,6 @@ import { MAX_ACCEPT_ANSWERS_BYTES } from '../src/tools/accept-answers.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 const projectId = '42';

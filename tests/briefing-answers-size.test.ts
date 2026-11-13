@@ -5,7 +5,6 @@ import { MAX_BRIEFING_ANSWERS_BYTES } from '../src/tools/briefing-answers.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
 });
 
 const projectId = '42';

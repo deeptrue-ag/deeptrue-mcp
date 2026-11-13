@@ -5,7 +5,6 @@ import { createDeepTrueMcpServer } from '../src/server.js';
 
 const config = loadConfig({
   DEEPTRUE_API_BASE: 'http://api.test',
-  DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
   DEEPTRUE_API_KEY: 'dt_test',
 });
 
@@ -79,7 +78,6 @@ describe('organization length', () => {
     );
     const longConfig = loadConfig({
       DEEPTRUE_API_BASE: 'http://api.test',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       DEEPTRUE_API_KEY: 'dt_test',
       DEEPTRUE_ORG: org,
     });
@@ -96,7 +94,6 @@ describe('organization length', () => {
     const org = 'b'.repeat(128);
     const longConfig = loadConfig({
       DEEPTRUE_API_BASE: 'http://api.test',
-      DEEPTRUE_SURVEY_ENGINE_BASE: 'http://survey.test',
       DEEPTRUE_API_KEY: 'dt_test',
       DEEPTRUE_ORG: org,
     });
