@@ -34,6 +34,10 @@ Use `deeptrue` when the client starts a local process. Use `deeptrue-remote` whe
 
 Keep the key in that local file or a password manager. Do not commit it.
 
+## Agent skill
+
+Cursor loads [`.cursor/skills/deeptrue-mcp/SKILL.md`](./.cursor/skills/deeptrue-mcp/SKILL.md) when connecting a client, calling these survey and research tools, or debugging MCP config.
+
 ## Clients
 
 | Client | Connection | Credentials |
