@@ -52,13 +52,13 @@ export function registerPanelTools(
     {
       title: 'List panel projects / demands',
       description:
-        'List Cint demands/audit, Bilendi projects/audit, or Dynata projects/audit. These Django routes require a deeptrue admin. A 403 is an admin refusal, not an empty list.',
+        'List Cint demands or audit, Bilendi projects or audit, or Dynata projects or audit. These routes require a deeptrue admin. A 403 is an admin refusal, not an empty list.',
       inputSchema: {
         provider: z.enum(['cint', 'bilendi', 'dynata']).optional(),
         resource: z
           .enum(['demands', 'audit', 'projects', 'target-groups'])
           .optional()
-          .describe('Provider resource that exists on the Django API'),
+          .describe('Panel resource the deeptrue API exposes for this provider'),
         limit: z.number().int().positive().max(100).optional(),
         offset: z.number().int().nonnegative().optional(),
       },

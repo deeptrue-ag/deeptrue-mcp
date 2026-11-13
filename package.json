@@ -2,13 +2,24 @@
   "name": "deeptrue-mcp",
   "version": "0.1.0",
   "type": "module",
-  "description": "DeepTrue MCP server for Cursor, Claude, and OpenAI",
+  "description": "Connect Cursor, Claude, ChatGPT, and Gemini to deeptrue surveys and research over the Model Context Protocol.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "deeptrue",
+    "surveys",
+    "research",
+    "cursor",
+    "claude",
+    "chatgpt",
+    "gemini"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deeptrue-ag/deeptrue-mcp.git"
   },
-  "homepage": "https://github.com/deeptrue-ag/deeptrue-mcp#readme",
+  "homepage": "https://www.deeptrue.ch",
   "bugs": {
     "url": "https://github.com/deeptrue-ag/deeptrue-mcp/issues"
   },
