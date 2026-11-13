@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "deeptrue": {
+      "command": "npx",
+      "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
+      "env": {
+        "DEEPTRUE_API_BASE": "http://127.0.0.1:8001",
+        "DEEPTRUE_SURVEY_ENGINE_BASE": "http://127.0.0.1:8050",
+        "DEEPTRUE_API_KEY": "dt_replace_me",
+        "DEEPTRUE_ORG": "public"
+      }
+    },
+    "deeptrue-remote": {
+      "url": "http://127.0.0.1:3100/mcp"
+    }
+  }
+}
