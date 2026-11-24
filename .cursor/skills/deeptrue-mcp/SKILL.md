@@ -23,7 +23,7 @@ Cursor and Claude Desktop / Claude Code start a local process. With no arguments
   "mcpServers": {
     "deeptrue": {
       "command": "npx",
-      "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
+      "args": ["-y", "deeptrue-mcp"],
       "env": {
         "DEEPTRUE_API_BASE": "https://api.deeptrue.ch",
         "DEEPTRUE_API_KEY": "dt_replace_me"
@@ -35,7 +35,7 @@ Cursor and Claude Desktop / Claude Code start a local process. With no arguments
 
 `DEEPTRUE_API_KEY` is required. `DEEPTRUE_API_BASE` is optional and defaults to `https://api.deeptrue.ch`. `DEEPTRUE_ORG` is optional (organization domain or slug stored on the key is used when it is omitted).
 
-Run the same command directly when checking that the process starts: `npx -y github:deeptrue-ag/deeptrue-mcp`.
+Run the same command directly when checking that the process starts: `npx -y deeptrue-mcp`.
 
 ### Remote (Claude, ChatGPT, and other URL clients)
 

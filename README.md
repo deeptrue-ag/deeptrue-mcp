@@ -17,7 +17,7 @@ Paste this into the client’s MCP config (Cursor’s project or user `mcp.json`
   "mcpServers": {
     "deeptrue": {
       "command": "npx",
-      "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
+      "args": ["-y", "deeptrue-mcp"],
       "env": {
         "DEEPTRUE_API_BASE": "https://api.deeptrue.ch",
         "DEEPTRUE_API_KEY": "dt_replace_me"
@@ -42,7 +42,7 @@ Cursor loads [`.cursor/skills/deeptrue-mcp/SKILL.md`](./.cursor/skills/deeptrue-
 
 | Client | Connection | Credentials |
 | --- | --- | --- |
-| Cursor | Local command `npx -y github:deeptrue-ag/deeptrue-mcp` | `DEEPTRUE_API_KEY` |
+| Cursor | Local command `npx -y deeptrue-mcp` | `DEEPTRUE_API_KEY` |
 | Claude | Local command, or remote `https://mcp.deeptrue.ch/mcp` | API key locally. OAuth on the remote URL, or an API key if Claude asks for one |
 | ChatGPT | Remote `https://mcp.deeptrue.ch/mcp` | OAuth only. Do not paste a `dt_…` key |
 | Gemini | Local command if Gemini runs a process, or the remote URL | API key, or a bearer this server exchanges for a session. No separate Gemini API |

@@ -2,7 +2,7 @@
   "mcpServers": {
     "deeptrue": {
       "command": "npx",
-      "args": ["-y", "github:deeptrue-ag/deeptrue-mcp"],
+      "args": ["-y", "deeptrue-mcp"],
       "env": {
         "DEEPTRUE_API_BASE": "https://api.deeptrue.ch",
         "DEEPTRUE_API_KEY": "dt_replace_me"
