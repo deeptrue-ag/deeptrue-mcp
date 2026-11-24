@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "deeptrue",
+  "version": "0.1.0",
+  "description": "Connect Cursor, Claude, ChatGPT, and Gemini to deeptrue surveys and research. Model Context Protocol server for projects, briefings, fielding, and reports.",
+  "author": {
+    "name": "deeptrue AG",
+    "url": "https://www.deeptrue.ch"
+  },
+  "homepage": "https://www.deeptrue.ch",
+  "repository": "https://github.com/deeptrue-ag/deeptrue-mcp",
+  "license": "MIT",
+  "keywords": ["mcp", "model-context-protocol", "surveys", "research", "cursor", "claude", "chatgpt", "gemini"]
+}

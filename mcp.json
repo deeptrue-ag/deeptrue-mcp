@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "deeptrue": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "deeptrue-mcp"],
+      "env": {
+        "DEEPTRUE_API_BASE": "https://api.deeptrue.ch"
+      }
+    }
+  }
+}
